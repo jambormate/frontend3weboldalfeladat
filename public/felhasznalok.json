@@ -1,0 +1,85 @@
+{
+  "felhasznalok": [
+    {
+      "id": "1",
+      "kor": 25,
+      "nev": "Kovács Péter",
+      "szuletesi_datum": "2001-03-15",
+      "aktiv": true,
+      "email": "peter.kovacs@example.com"
+    },
+    {
+      "id": "2",
+      "kor": 32,
+      "nev": "Nagy Anna",
+      "szuletesi_datum": "1994-07-22",
+      "aktiv": true,
+      "email": "anna.nagy@example.com"
+    },
+    {
+      "id": "3",
+      "kor": 19,
+      "nev": "Szabó Márk",
+      "szuletesi_datum": "2007-11-08",
+      "aktiv": false,
+      "email": "mark.szabo@example.com"
+    },
+    {
+      "id": "4",
+      "kor": 41,
+      "nev": "Tóth Eszter",
+      "szuletesi_datum": "1985-01-30",
+      "aktiv": true,
+      "email": "eszter.toth@example.com"
+    },
+    {
+      "id": "5",
+      "kor": 28,
+      "nev": "Horváth Bence",
+      "szuletesi_datum": "1998-05-12",
+      "aktiv": false,
+      "email": "bence.horvath@example.com"
+    },
+    {
+      "id": "6",
+      "kor": 35,
+      "nev": "Varga Lilla",
+      "szuletesi_datum": "1991-09-03",
+      "aktiv": true,
+      "email": "lilla.varga@example.com"
+    },
+    {
+      "id": "7",
+      "kor": 22,
+      "nev": "Kiss Dávid",
+      "szuletesi_datum": "2004-12-19",
+      "aktiv": true,
+      "email": "david.kiss@example.com"
+    },
+    {
+      "id": "8",
+      "kor": 30,
+      "nev": "Molnár Réka",
+      "szuletesi_datum": "1996-04-25",
+      "aktiv": false,
+      "email": "reka.molnar@example.com"
+    },
+    {
+      "id": "9",
+      "kor": 45,
+      "nev": "Németh Gábor",
+      "szuletesi_datum": "1981-08-14",
+      "aktiv": true,
+      "email": "gabor.nemeth@example.com"
+    },
+    {
+      "id": "10",
+      "kor": 27,
+      "nev": "Farkas Zsófia",
+      "szuletesi_datum": "1999-02-06",
+      "aktiv": true,
+      "email": "zsofia.farkas@example.com"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
