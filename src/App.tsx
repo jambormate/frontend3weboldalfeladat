@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import type { Felhasznalok } from "./types/type";
+import Admin from "./components/admin";
+import Moderator from "./components/mod";
+import User from "./components/user";
 
 function App() {
   const [users, setUsers] = useState<Felhasznalok[]>([]);
@@ -9,6 +12,7 @@ function App() {
   const [szuletesiDatum, setSzuletesiDatum] = useState<Date>(new Date());
   const [aktiv, setAktiv] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
+  const [oldal, setOldal] = useState<string>("admin");
 
   useEffect(() => {
     async function fetchUsers() {
@@ -97,10 +101,28 @@ function App() {
       console.log(error);
     }
   }
+  async function handleAktivValtas(user: Felhasznalok) {
+    try {
+      const ujAktiv = !user.aktiv;
+      const response = await fetch(
+        "http://localhost:3000/felhasznalok/" + user.id,
+        {
+          method: "PATCH",
+          headers: { "Content-type": "application/json" },
+          body: JSON.stringify({ aktiv: ujAktiv }),
+        }
+      );
+      setUsers((elozo) =>
+        elozo.map((u) => (u.id === user.id ? { ...u, aktiv: ujAktiv } : u)),
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <>
-      <header>
+      <header className="container-fluid bg-dark text-white">
         <div className="col-12 text-center">
           <h1>Felhasználók weboldal</h1>
         </div>
@@ -108,120 +130,58 @@ function App() {
           className="col-12"
           style={{ display: "flex", justifyContent: "center", gap: "10px" }}
         >
-          <button className="btn btn-primary">Adminisztrátor</button>
-          <button className="btn btn-primary">Moderátor</button>
-          <button className="btn btn-primary">Felhasználó</button>
+          <button
+            className={`btn ${oldal === "admin" ? "btn-success" : "btn-primary"}`}
+            onClick={() => setOldal("admin")}
+          >
+            Adminisztrátor
+          </button>
+          <button
+            className={`btn ${oldal === "moderator" ? "btn-success" : "btn-primary"}`}
+            onClick={() => setOldal("moderator")}
+          >
+            Moderátor
+          </button>
+          <button
+            className={`btn ${oldal === "user" ? "btn-success" : "btn-primary"}`}
+            onClick={() => setOldal("user")}
+          >
+            Felhasználó
+          </button>
         </div>
       </header>
-      <main>
-        <div
-          className="col-12 text-center table-responsive"
-          style={{ marginTop: "20px" }}
-        >
-          <h2>Felhasználók listája</h2>
-          <table
-            className="table table-hover table-striped table-bordered"
-            style={{ width: "80%", margin: "0 auto" }}
-          >
-            <thead>
-              <tr>
-                <th>Név</th>
-                <th>Életkor</th>
-                <th>Születési idő</th>
-                <th>Email</th>
-                <th>Aktív</th>
-                <th>Műveletek</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user, index) => (
-                <tr key={index}>
-                  <td>{user.nev}</td>
-                  <td>{user.kor}</td>
-                  <td>
-                    {new Date(user.szuletesi_datum).toLocaleDateString("hu-HU")}
-                  </td>
-                  <td>{user.email}</td>
-                  <td>{user.aktiv ? "Igen" : "Nem"}</td>
-                  <td>
-                    <button
-                      className="btn btn-danger"
-                      onClick={() =>
-                        handleFelhasznaloTorles(user.id.toString())
-                      }
-                    >
-                      Törlés
-                    </button>
-                    <button
-                      className="btn btn-warning"
-                      onClick={() => handlePluszKor(user)}
-                    >
-                      Életkor növelése
-                    </button>
-                    <button
-                      className="btn btn-info"
-                      onClick={() => handleMinuszKor(user)}
-                    >
-                      Életkor csökkentése
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <div className="col-12 text-center" style={{ marginTop: "20px" }}>
-          <h2>Új felhasználó felvétele</h2>
-          <form
-            onSubmit={handleFelhasznaloFelvetel}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: "10px",
-            }}
-          >
-            <input
-              type="text"
-              placeholder="Név"
-              value={nev}
-              onChange={(e) => setNev(e.target.value)}
-              required
-            />
-            <input
-              type="number"
-              placeholder="Életkor"
-              value={kor}
-              onChange={(e) => setKor(Number(e.target.value))}
-              required
-            />
-            <input
-              type="date"
-              placeholder="Születési idő"
-              value={szuletesiDatum.toISOString().split("T")[0]}
-              onChange={(e) => setSzuletesiDatum(new Date(e.target.value))}
-              required
-            />
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            <label>
-              Aktív:
-              <input
-                type="checkbox"
-                checked={aktiv}
-                onChange={(e) => setAktiv(e.target.checked)}
-              />
-            </label>
-            <button type="submit" className="btn btn-success">
-              Felhasználó felvétele
-            </button>
-          </form>
-        </div>
+      <main className="container-fluid">
+        {oldal === "admin" && (
+          <Admin
+            users={users}
+            nev={nev}
+            setNev={setNev}
+            kor={kor}
+            setKor={setKor}
+            szuletesiDatum={szuletesiDatum}
+            setSzuletesiDatum={setSzuletesiDatum}
+            aktiv={aktiv}
+            setAktiv={setAktiv}
+            email={email}
+            setEmail={setEmail}
+            handleFelhasznaloFelvetel={handleFelhasznaloFelvetel}
+            handleFelhasznaloTorles={handleFelhasznaloTorles}
+            handlePluszKor={handlePluszKor}
+            handleMinuszKor={handleMinuszKor}
+            handleAktivValtas={handleAktivValtas}
+          />
+        )}
+
+        {oldal === "moderator" && (
+          <Moderator
+            users={users}
+            handlePluszKor={handlePluszKor}
+            handleMinuszKor={handleMinuszKor}
+            handleAktivValtas={handleAktivValtas}
+          />
+        )}
+
+        {oldal === "user" && <User users={users} />}
       </main>
     </>
   );
